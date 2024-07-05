@@ -23,9 +23,9 @@ public class PetDatabase {
                     break;
             case 2: addPets();
                     break;
-            case 3: //updatePets();
+            case 3: updatePets();
                     break;
-            case 4: //removePet();
+            case 4: removePet();
                     break;
             case 5: searchPetsByName();
                     break;
@@ -129,5 +129,40 @@ public class PetDatabase {
             }
         }
         printTableFooter(rowCount);
+    }
+    //Remove object
+    private static void removePet() {
+        showAllPets();
+        System.out.println("Enter the pet ID to remove: ");
+        int id = s.nextInt();
+
+        try {
+            if (id < 0 || id >= petCount) {
+                //Exception if ID doesn't exist
+                throw new InvalidIDException();  
+            }
+
+            System.out.printf("%s %d is removed.\n", pets[id].getName(), pets[id].getAge());
+            petCount--;
+
+            // Shift elements to fill the gap left by the removed pet
+            for (int i = id; i < petCount; i++) {
+                pets[i] = pets[i + 1];
+            }
+        } catch (InvalidIDException e) {
+            System.out.println("Invalid ID. Use an ID from the available list.");
+            removePet();  
+        }
+    }
+    //Update pets
+    public static void updatePets() {
+            showAllPets();
+            String name = " ";
+            System.out.println("Enter the pet ID you'd like to update: ");
+            int id = s.nextInt();
+            System.out.println("Enter new name and new age: ");
+            name = s.next();
+            int age = s.nextInt();
+            pets[id] = new Pet(name, age);
     }
 }
