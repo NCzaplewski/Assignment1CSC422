@@ -7,7 +7,6 @@ package petdatabase;
 
 import java.util.Scanner;
 public class PetDatabase {
-    static int CAPACITY;
     static Pet[] pets = new Pet[100];
     static int petCount = 0;
     static int rowCount = 0;
@@ -28,9 +27,9 @@ public class PetDatabase {
                     break;
             case 4: //removePet();
                     break;
-            case 5: //searchPetsByName();
+            case 5: searchPetsByName();
                     break;
-            case 6: //searchPetsByAge();
+            case 6: searchPetsByAge();
                     break;
             case 7: System.out.println("Goodbye!");
                     break;
@@ -102,5 +101,33 @@ public class PetDatabase {
         }
         printTableFooter(rowCount);
     }
-
+    
+    //Search names of objects regardless of case
+    private static void searchPetsByName(){
+        rowCount = 0;
+        System.out.println("Enter a name to search: ");
+        String searchName = s.next();
+        printTableHeader();
+        for (int id = 0; id < petCount; id++) {
+            if (pets[id].getName().equalsIgnoreCase(searchName)) {
+                    rowCount++;
+                    printTableRow(id, pets[id].getName(), pets[id].getAge());
+            }
+        }
+        printTableFooter(rowCount);
+    }
+    //Search ages of objects
+    private static void searchPetsByAge() {
+        rowCount = 0;
+        System.out.println("Enter an age to search: ");
+        int searchAge = s.nextInt();
+        printTableHeader();
+        for (int id = 0; id < petCount; id++) {
+            if (pets[id].getAge() == searchAge) {
+                    rowCount++;
+                    printTableRow(id, pets[id].getName(), pets[id].getAge());
+            }
+        }
+        printTableFooter(rowCount);
+    }
 }
