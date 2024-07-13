@@ -1,53 +1,59 @@
 package petdatabase;
-
+//Commenting out unnecessary features
 /**
  *
  * @author natas
  */
-
+import java.io.*;
 import java.util.Scanner;
 public class PetDatabase {
-    static Pet[] pets = new Pet[100];
+    static Pet[] pets = new Pet[5];
     static int petCount = 0;
     static int rowCount = 0;
     static Scanner s = new Scanner(System.in);
+    static final String FILE = "C:\\Users\\natas\\Documents\\NetBeansProjects\\Assignment1CSC422\\PetDatabase\\src\\petdatabase\\pets.txt";
     /**
      * @param args the command line arguments
+     * @throws java.lang.Exception
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
             System.out.println("Pet Database Program.");
-            int program = getUserChoice();
+            int program;
+            readPets();
             do {
-            switch (program) {
-            case 1: showAllPets();
-                    break;
-            case 2: addPets();
-                    break;
-            case 3: updatePets();
-                    break;
-            case 4: removePet();
-                    break;
-            case 5: searchPetsByName();
-                    break;
-            case 6: searchPetsByAge();
-                    break;
-            case 7: System.out.println("Goodbye!");
-                    break;
+                program = getUserChoice();
+                switch (program) {
+                    case 1: showAllPets();
+                            break;
+                    case 2: addPets();
+                            break;
+                    /*case 3: updatePets();
+                            break;*/
+                    case 3: removePet();
+                            break;
+                    /*case 5: searchPetsByName();
+                            break;
+                    case 6: searchPetsByAge();
+                            break;*/
+                    case 4: savePets();
+                            System.out.println("Goodbye!");
+                            break;
+                    default:
+                            System.out.println("Invalid choice. Try again.");
+                }
             }
-            program = getUserChoice();
-            }
-            while (program != 7);
+            while (program != 4);
     }
     //List options, take choice input
     private static int getUserChoice() {
         System.out.println("\nWhat would you like to do? \n" +
         "\n 1. View all pets" +
         "\n 2. Add more pets: Type 'done' when done." +
-        "\n 3. Update an existing pet" +
-        "\n 4. Remove an existing pet" +
-        "\n 5. Search pets by name" +
-        "\n 6. Search pets by age" +
-        "\n 7. Exit program");
+        //"\n 3. Update an existing pet" +
+        "\n 3. Remove an existing pet" +
+        //"\n 5. Search pets by name" +
+        //"\n 6. Search pets by age" +
+        "\n 4. Exit program");
         System.out.println("Your choice: ");
         int program = s.nextInt();
         return program;
@@ -103,7 +109,7 @@ public class PetDatabase {
     }
     
     //Search names of objects regardless of case
-    private static void searchPetsByName(){
+    /*private static void searchPetsByName(){
         rowCount = 0;
         System.out.println("Enter a name to search: ");
         String searchName = s.next();
@@ -130,6 +136,7 @@ public class PetDatabase {
         }
         printTableFooter(rowCount);
     }
+    */
     //Remove object
     private static void removePet() {
         showAllPets();
@@ -155,7 +162,7 @@ public class PetDatabase {
         }
     }
     //Update pets
-    public static void updatePets() {
+    /*public static void updatePets() {
             showAllPets();
             String name = " ";
             System.out.println("Enter the pet ID you'd like to update: ");
@@ -164,5 +171,37 @@ public class PetDatabase {
             name = s.next();
             int age = s.nextInt();
             pets[id] = new Pet(name, age);
+    }
+    */
+    //Save pets
+    private static void savePets() {
+        try (FileWriter writer = new FileWriter(FILE)) {
+            for (int i = 0; i < petCount; i++) {
+                writer.write(pets[i].getName() + 
+                        " " + pets[i].getAge() + "\n");
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving pets to file." + e.getMessage());
+        }
+    }
+    
+    //Load pets
+    private static void readPets() {
+        File file = new File(FILE);
+        try (Scanner input = new Scanner(file)){
+            petCount = 0; 
+            //read through file
+            while (input.hasNextLine()){
+                String line = input.nextLine();
+                String[] split = line.split(" ");
+                if (split.length == 2){
+                    String name = split[0];
+                    int age = Integer.parseInt(split[1]);
+                    pets[petCount++] = new Pet(name, age);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found: " + e.getMessage());
+        }
     }
 }

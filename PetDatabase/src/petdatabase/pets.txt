@@ -1,0 +1,3 @@
+bandit 10
+smokey 3
+gabby 2
