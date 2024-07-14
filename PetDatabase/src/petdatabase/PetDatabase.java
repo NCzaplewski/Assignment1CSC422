@@ -5,6 +5,7 @@ package petdatabase;
  * @author natas
  */
 import java.io.*;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 public class PetDatabase {
     static Pet[] pets = new Pet[5];
@@ -61,6 +62,11 @@ public class PetDatabase {
             //Add pets
     public static void addPets() {
         rowCount = 0;
+        //error if database if full, exit method
+        if (petCount>= pets.length) {
+            System.out.println("Error: Database is full.");
+            return;
+        }
         String name = " ";
         for (int id = 0; id < pets.length ; id++) {
                 if (petCount != 0) {
@@ -72,16 +78,23 @@ public class PetDatabase {
             System.out.printf("%s pet(s) added.", rowCount);
             break;
         }
-        int age = s.nextInt();
+        int age;
         try {
+            age = s.nextInt();
+            //validate age
+            if (age < 1 || age > 20) {
+                throw new InvalidAgeException();
+            }
             pets[id] = new Pet(name, 0);
             pets[id].setAge(age);
             petCount++;
             rowCount++;
         } catch (InvalidAgeException e) {
-            System.out.println("Invalid age. Must be between 1 and 50.");
+            System.out.println("Error: Age must be between 1 and 20.");
             id--;
-        } 
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input for age.");
+        }
         }
     }
     private static void printTableHeader() {
@@ -146,7 +159,7 @@ public class PetDatabase {
         try {
             if (id < 0 || id >= petCount) {
                 //Exception if ID doesn't exist
-                throw new InvalidIDException();  
+                throw new InvalidIDException();
             }
 
             System.out.printf("%s %d is removed.\n", pets[id].getName(), pets[id].getAge());
@@ -157,7 +170,7 @@ public class PetDatabase {
                 pets[i] = pets[i + 1];
             }
         } catch (InvalidIDException e) {
-            System.out.println("Invalid ID. Use an ID from the available list.");
+            System.out.println("Error: ID " + id + " does not exist. Choose an ID from the available list.");
             removePet();  
         }
     }

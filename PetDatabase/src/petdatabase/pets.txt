@@ -1,3 +1,5 @@
 bandit 10
 smokey 3
 gabby 2
+Pandy 2
+auggie 10
